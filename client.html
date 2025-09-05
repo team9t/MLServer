@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PV Forecast Client</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #f5f5f5;
+        padding: 20px;
+        text-align: center;
+      }
+      #prediction {
+        margin-top: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        align-items: center;
+      }
+      .card {
+        background: white;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        width: 280px;
+        text-align: center;
+      }
+      button {
+        padding: 10px 20px;
+        font-size: 16px;
+        border: none;
+        background: #007bff;
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 10px;
+      }
+      button:hover {
+        background: #0056b3;
+      }
+      .label {
+        font-weight: bold;
+        display: block;
+        margin-bottom: 5px;
+        color: #333;
+      }
+      .value {
+        font-size: 18px;
+        color: #007bff;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>PV Forecast Client</h1>
+    <button onclick="getPrediction()">Get Latest Prediction</button>
+
+    <div id="prediction">
+      <div class="card">
+        <span class="label">Scaled Prediction</span>
+        <span class="value" id="scaled">--</span>
+      </div>
+      <div class="card">
+        <span class="label">Real Prediction</span>
+        <span class="value" id="real">--</span>
+      </div>
+      <div class="card">
+        <span class="label">Queue Size</span>
+        <span class="value" id="queue">--</span>
+      </div>
+      <!-- <div class="card">
+        <span class="label">Latest Created At</span>
+        <span class="value" id="time">--</span>
+      </div> -->
+    </div>
+
+    <script>
+      async function getPrediction() {
+        try {
+          const response = await fetch("http://localhost:8000/predict");
+          if (!response.ok) {
+            throw new Error("Server error: " + response.status);
+          }
+          const data = await response.json();
+
+          document.getElementById("scaled").innerText =
+            data.prediction_scaled?.toFixed(4);
+          document.getElementById("real").innerText =
+            data.prediction_real;
+          document.getElementById("queue").innerText = data.queue_size ?? "--";
+          // document.getElementById("time").innerText = data.latest_createdAt
+          //   ? new Date(data.latest_createdAt).toLocaleString()
+          //   : "--";
+        } catch (error) {
+          console.error("Error fetching prediction:", error);
+          document.getElementById("scaled").innerText = "Error";
+          document.getElementById("real").innerText = "Error";
+          document.getElementById("queue").innerText = "--";
+          // document.getElementById("time").innerText = "--";
+        }
+      }
+    </script>
+  </body>
+</html>

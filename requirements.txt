@@ -1,0 +1,9 @@
+fastapi
+uvicorn[standard]
+pymongo[srv]
+torch
+torchvision
+numpy
+Pillow
+python-dotenv
+joblib
