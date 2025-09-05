@@ -7,3 +7,10 @@ numpy
 Pillow
 python-dotenv
 joblib
+scikit-learn
+tensorflow
+pandas
+matplotlib
+seaborn
+tqdm 
+h5py
